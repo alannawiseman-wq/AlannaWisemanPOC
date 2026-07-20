@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Food Menu POC</title>
+ 
+  <style>
+    body  { font-family: Arial, sans-serif; margin: 2rem; }
+    table { border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 8px 12px; text-align: left; }
+    th    { background: #f0f0f0; }
+    .disclaimer { margin-top: 1.5rem; font-size: 0.85rem; color: #666; }
+  </style>
+</head>
+<body>
+ 
+  <h1>Food Menu</h1>
+ 
+  <table>
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Price</th>
+      </tr>
+    </thead>
+    <tbody id="foodTableBody">
+     <!-- rows inserted here by JavaScript -->
+    </tbody>
+  </table>
+ 
+   <p class="disclaimer">
+    Disclaimer: This application is student work, created only to
+    demonstrate web development skills.
+  </p>
+ 
+  <script>
+   async function loadFoods() {
+      try {
+        // Asks the backend for the data 
+        const response = await fetch('/foods');
+ 
+        // Convert the JSON response into a JavaScript array
+        const foods = await response.json();
+ 
+        // Finds the empty <tbody> where rows will go.
+        const tableBody = document.getElementById('foodTableBody');
+ 
+        // For each food, build a row and add it to the table.
+        foods.forEach(food => {
+          const row = document.createElement('tr');   // make a new <tr>
+          row.innerHTML = `
+            <td>${food.id}</td>
+            <td>${food.name}</td>
+            <td>$${food.price.toFixed(2)}</td>
+          `;
+          tableBody.appendChild(row);                 // add row to the table
+        });
+      } catch (error) {
+        // If the fetch fails, log it 
+        console.error('Error loading foods:', error);
+      }
+    }
+ 
+    // Run the function as soon as the page loads.
+    loadFoods();
+  </script>
+ 
+</body>
+</html>
